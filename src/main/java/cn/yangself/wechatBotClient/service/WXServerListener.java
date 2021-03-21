@@ -2,10 +2,12 @@ package cn.yangself.wechatBotClient.service;
 
 import cn.yangself.WechatBotClientApplication;
 import cn.yangself.wechatBotClient.domain.WXMsg;
+import cn.yangself.wechatBotClient.messageservice.MessageDealService;
 import lombok.extern.slf4j.Slf4j;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.enums.ReadyState;
 import org.java_websocket.handshake.ServerHandshake;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -43,6 +45,9 @@ public class WXServerListener extends WebSocketClient {
     private static final String CONTACT_LIST = "user list";
     private static final String NULL_MSG = "null";
 
+    @Autowired
+    private MessageDealService messageDealService;
+
     public WXServerListener(String url) throws URISyntaxException {
         super(new URI(url));
     }
@@ -63,7 +68,8 @@ public class WXServerListener extends WebSocketClient {
         //也可以在这里调用的其他的接口，可以使用Utils包下面的NetPostRequest进行相应的调用
 
         //注意对sender为ROOT时的消息进行过滤，还有对公众号的消息进行过滤(gh_xxxxxx)
-        log.info("接收到的消息 --> " + s);
+//        log.info("接收到的消息 --> " + s);
+        messageDealService.dealTextMessage(s);
     }
 
     @Override
