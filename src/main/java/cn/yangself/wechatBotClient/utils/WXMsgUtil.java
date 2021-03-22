@@ -13,7 +13,7 @@ public class WXMsgUtil {
 
     private static String botNick;
 
-    @Value("${config.weChat.botnick}")
+    @Value("${wechat.botnick}")
     public void setBotNick(String botNick) {
         WXMsgUtil.botNick = botNick;
     }

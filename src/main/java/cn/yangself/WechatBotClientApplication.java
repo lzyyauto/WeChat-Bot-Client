@@ -13,7 +13,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @SpringBootApplication
 public class WechatBotClientApplication {
 
-    @Value("${config.weChat.url}")
+    @Value("${wechat.url}")
     private String weChatUrl;
 
     public static String[] args;
