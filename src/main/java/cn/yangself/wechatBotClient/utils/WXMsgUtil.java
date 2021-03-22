@@ -2,11 +2,8 @@ package cn.yangself.wechatBotClient.utils;
 
 import cn.yangself.wechatBotClient.constant.CommandString;
 import cn.yangself.wechatBotClient.domain.WXMsg;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 @Component
 public class WXMsgUtil {

@@ -1,0 +1,10 @@
+# Project Config
+server:
+  port: 8080
+spring:
+  profiles:
+    active: test
+# Wechat Config
+wechat:
+  url: ws://192.168.1.1:5555
+  botnick: 微信bot昵称
