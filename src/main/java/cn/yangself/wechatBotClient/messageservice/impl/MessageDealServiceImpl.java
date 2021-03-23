@@ -18,7 +18,7 @@ public class MessageDealServiceImpl implements MessageDealService {
 
     @Override
     public boolean dealTextMessage(String s) {
-//        log.info(s);
+        log.info(s);
 //        JSONObject message = JSON.parseObject(s);
         WXMsg message = JSON.parseObject(s, WXMsg.class);
         message = WXMsgUtil.formatWXMsg(message);
