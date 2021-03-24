@@ -4,16 +4,26 @@ server:
 spring:
   profiles:
     active: test
+
+  # Redis
+  redis:
+    database: 0
+    host: 192.168.1.1
+    port: 6379
+    password: 12345
+    timeout: 3000
+
+  jedis:
+    pool:
+      max-active: 8
+      max-wait: -1
+      max-idle: 8
+      min-idle: 0
+
 # Wechat
 wechat:
   url: ws://192.168.1.1:5555
   botnick: 微信bot昵称
   botwxid: wxid_xxxxxxxxx
 
-# Redis
-redis:
-  database: 0
-  host: 192.168.1.1
-  port: 6379
-  password: 12345
-  timeout: 3000
+

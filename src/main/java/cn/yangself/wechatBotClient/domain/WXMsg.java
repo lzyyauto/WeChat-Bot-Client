@@ -1,7 +1,6 @@
 package cn.yangself.wechatBotClient.domain;
 
 import com.alibaba.fastjson.JSON;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
