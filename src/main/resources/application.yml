@@ -25,5 +25,6 @@ wechat:
   url: ws://192.168.1.1:5555
   botnick: 微信bot昵称
   botwxid: wxid_xxxxxxxxx
+  admin: 管理员昵称
 
 

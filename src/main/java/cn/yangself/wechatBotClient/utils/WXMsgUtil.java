@@ -15,6 +15,12 @@ public class WXMsgUtil {
         WXMsgUtil.botNick = botNick;
     }
 
+    private static String admin;
+
+    @Value("${wechat.admin}")
+    public void setAdmin(String admin) {
+        WXMsgUtil.admin = admin;
+    }
 
     public static WXMsg formatWXMsg(WXMsg wxMsg) {
         if (wxMsg.getType() != 1) {
@@ -38,6 +44,11 @@ public class WXMsgUtil {
     }
 
     public static String checkURL(String content) {
+        //TODO 判断并且转链
         return null;
+    }
+
+    public static boolean isAdmin(String wxid) {
+        return wxid.equals(admin);
     }
 }
