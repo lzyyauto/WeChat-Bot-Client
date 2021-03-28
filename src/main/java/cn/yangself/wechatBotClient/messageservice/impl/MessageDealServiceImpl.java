@@ -130,6 +130,7 @@ public class MessageDealServiceImpl implements MessageDealService {
                     } else {
                         friends.put(func[2], forwardingService.getWxidByNick(func[2]));
                     }
+                    break;
                 default:
                     log.info("nothing happen!");
             }
