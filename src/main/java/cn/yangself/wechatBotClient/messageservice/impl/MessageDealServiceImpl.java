@@ -3,8 +3,8 @@ package cn.yangself.wechatBotClient.messageservice.impl;
 import cn.yangself.wechatBotClient.constant.CommandString;
 import cn.yangself.wechatBotClient.domain.WXMsg;
 import cn.yangself.wechatBotClient.enums.CommandEnum;
-import cn.yangself.wechatBotClient.messageservice.ForwardingService;
 import cn.yangself.wechatBotClient.messageservice.MessageDealService;
+import cn.yangself.wechatBotClient.service.ForwardingService;
 import cn.yangself.wechatBotClient.service.WXServerListener;
 import cn.yangself.wechatBotClient.utils.WXMsgUtil;
 import com.alibaba.fastjson.JSON;
@@ -32,6 +32,7 @@ public class MessageDealServiceImpl implements MessageDealService {
 //        JSONObject message = JSON.parseObject(s);
         WXMsg message = JSON.parseObject(s, WXMsg.class);
         message = WXMsgUtil.formatWXMsg(message);
+        String bindID = null;
         //判断类型
         switch (message.getType()) {
             case 5005:
@@ -41,6 +42,7 @@ public class MessageDealServiceImpl implements MessageDealService {
                 String resultURL = WXMsgUtil.checkURL(message.getContent());
                 if (message.getRoomId() != null) {
                     log.info("群聊消息:" + message.getNick() + ":" + message.getContent());
+                    bindID = getBingingID(message.getRoomId());
                     if (message.getIsAt()) {
                         //圈我
                         //判断指令
@@ -56,17 +58,23 @@ public class MessageDealServiceImpl implements MessageDealService {
                     if (message.getNick().equals(botWxId)) {
                         log.info("我自己发的消息:" + message.getContent());
                     } else {
+                        bindID = getBingingID(message.getWxid());
+                        if (bindID != null) bindID = bindID + "@chatroom";
                         //判断管理员
                         if (WXMsgUtil.isAdmin(message.getNick())) {
                             //判断指令
                             if (message.getContent().contains(CommandString.FUNCTION)) {
                                 dosomething(message, CommandEnum.COMMANDADMIN.getCode());
-//                                forwardingService.bindingChatroom(message);
                             }
                         }
                         log.info("单聊消息:" + message.getNick() + ":" + message.getContent());
                     }
 
+                }
+
+                if (bindID != null) {
+                    //转发去bindID
+                    wxServerListener.sendTextMsg(bindID, message.getContent());
                 }
                 break;
             default:
@@ -91,24 +99,29 @@ public class MessageDealServiceImpl implements MessageDealService {
                 case BINDING:
                     //绑定一定有参数.不用判断为空
                     message.setContent(func[2]);
+                    String bindID = message.getWxid();
                     if (type == CommandEnum.COMMANDCHAT.getCode()) {
-                        forwardingService.bindingPerson(message);
-                    } else {
-                        forwardingService.bindingChatroom(message);
+                        bindID = message.getRoomId();
                     }
+                    forwardingService.binding(bindID, message.getContent());
                     break;
                 case UNBUNDLING:
+                    String unbundID = message.getWxid();
                     if (type == CommandEnum.COMMANDCHAT.getCode()) {
-                        forwardingService.unbundlingPerson(message);
-                    } else {
-                        forwardingService.unbundlingChatroom(message);
+                        unbundID = message.getRoomId();
                     }
+                    forwardingService.unbundling(unbundID);
                     break;
                 default:
                     log.info("nothing happen!");
             }
+        } else {
+            log.info("command absence!");
         }
-        log.info("command absence!");
 
+    }
+
+    private String getBingingID(String key) {
+        return forwardingService.getBindingID(key);
     }
 }

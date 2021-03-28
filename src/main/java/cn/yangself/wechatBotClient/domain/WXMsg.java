@@ -6,11 +6,14 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class WXMsg {
+public class WXMsg implements Serializable {
+    private static final long serialVersionUID = 2892248514883451461L;
     private String id;
     private String wxid;
     private String content;

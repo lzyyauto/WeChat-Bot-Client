@@ -1,8 +1,12 @@
-package cn.yangself.wechatBotClient.messageservice;
+package cn.yangself.wechatBotClient.service;
 
 import cn.yangself.wechatBotClient.domain.WXMsg;
 
 public interface ForwardingService {
+    boolean binding(String key, String value);
+
+    boolean unbundling(String key);
+
     boolean bindingPerson(WXMsg message);
 
     boolean bindingChatroom(WXMsg message);
@@ -10,4 +14,6 @@ public interface ForwardingService {
     boolean unbundlingPerson(WXMsg message);
 
     boolean unbundlingChatroom(WXMsg message);
+
+    String getBindingID(String key);
 }
