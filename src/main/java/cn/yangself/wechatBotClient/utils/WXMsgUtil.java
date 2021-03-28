@@ -1,7 +1,8 @@
 package cn.yangself.wechatBotClient.utils;
 
-import cn.yangself.wechatBotClient.constant.CommandString;
+import cn.yangself.wechatBotClient.constant.Constant;
 import cn.yangself.wechatBotClient.domain.WXMsg;
+import cn.yangself.wechatBotClient.service.WXServerListener;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -23,11 +24,11 @@ public class WXMsgUtil {
     }
 
     public static WXMsg formatWXMsg(WXMsg wxMsg) {
-        if (wxMsg.getType() != 1) {
+        if (wxMsg.getType() != WXServerListener.RECV_TXT_MSG) {
             //系统消息不做转换
             return wxMsg;
         }
-        if (wxMsg.getId2().contains(CommandString.CHATROOM)) {
+        if (wxMsg.getId2().contains(Constant.CHATROOM)) {
             String[] ids = wxMsg.getId2().split("@");
             wxMsg.setRoomId(ids[0]);
 

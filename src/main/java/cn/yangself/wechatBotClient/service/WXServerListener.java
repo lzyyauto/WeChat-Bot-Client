@@ -25,21 +25,21 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class WXServerListener extends WebSocketClient {
 
-    private static final int HEART_BEAT = 5005;             //服务器返回心跳包
-    private static final int RECV_TXT_MSG = 1;              //收到的消息为文字消息
-    private static final int RECV_PIC_MSG = 3;              //收到的消息为图片消息
-    private static final int USER_LIST = 5000;              //发送消息类型为获取用户列表
-    private static final int GET_USER_LIST_SUCCSESS = 5001; //获取用户列表成功
-    private static final int GET_USER_LIST_FAIL     = 5002; //获取用户列表失败
-    private static final int TXT_MSG = 555;                 //发送消息类型为文本
-    private static final int PIC_MSG = 500;                 //发送消息类型为图片
-    private static final int AT_MSG = 550;                  //发送群中@用户的消息
-    private static final int CHATROOM_MEMBER = 5010;        //获取群成员
-    private static final int CHATROOM_MEMBER_NICK = 5020;
-    private static final int PERSONAL_INFO = 6500;
-    private static final int DEBUG_SWITCH = 6000;
-    private static final int PERSONAL_DETAIL =6550;
-    private static final int DESTROY_ALL = 9999;
+    public static final int HEART_BEAT = 5005;             //服务器返回心跳包
+    public static final int RECV_TXT_MSG = 1;              //收到的消息为文字消息
+    public static final int RECV_PIC_MSG = 3;              //收到的消息为图片消息
+    public static final int USER_LIST = 5000;              //发送消息类型为获取用户列表
+    public static final int GET_USER_LIST_SUCCSESS = 5001; //获取用户列表成功
+    public static final int GET_USER_LIST_FAIL = 5002; //获取用户列表失败
+    public static final int TXT_MSG = 555;                 //发送消息类型为文本
+    public static final int PIC_MSG = 500;                 //发送消息类型为图片
+    public static final int AT_MSG = 550;                  //发送群中@用户的消息
+    public static final int CHATROOM_MEMBER = 5010;        //获取群成员
+    public static final int CHATROOM_MEMBER_NICK = 5020;
+    public static final int PERSONAL_INFO = 6500;
+    public static final int DEBUG_SWITCH = 6000;
+    public static final int PERSONAL_DETAIL = 6550;
+    public static final int DESTROY_ALL = 9999;
 
     private static final String ROOM_MEMBER_LIST = "op:list member";
     private static final String CONTACT_LIST = "user list";
@@ -59,6 +59,7 @@ public class WXServerListener extends WebSocketClient {
 
     /**
      * 在这里进行消息监听
+     *
      * @param s
      */
     @Override
@@ -91,6 +92,7 @@ public class WXServerListener extends WebSocketClient {
 
     /**
      * 发送信息
+     *
      * @param json 要发送信息的json字符串
      */
     private void sendMsg(String json) {
@@ -106,18 +108,20 @@ public class WXServerListener extends WebSocketClient {
 
     /**
      * 获取会话ID
+     *
      * @return
      */
-    private String getSessionId(){
+    private String getSessionId() {
         return String.valueOf(new Date().getTime());
     }
 
     /**
      * 发送文本消息
+     *
      * @param wxid 个人的wxid或者群id（xxx@chatroom）
      * @param text 要发送的消息内容
      */
-    public void sendTextMsg(String wxid, String text){
+    public void sendTextMsg(String wxid, String text) {
         //创建发送消息JSON
         String json = WXMsg.builder()
                 .content(text)
@@ -132,7 +136,8 @@ public class WXServerListener extends WebSocketClient {
 
     /**
      * 发送图片消息
-     * @param wxid  个人的wxid或者群id（xxx@chatroom）
+     *
+     * @param wxid      个人的wxid或者群id（xxx@chatroom）
      * @param imgUrlStr 发送图片的绝对路径
      */
     public void sendImgMsg(String wxid, String imgUrlStr) {
@@ -151,7 +156,7 @@ public class WXServerListener extends WebSocketClient {
     /**
      * 发送AT类型消息 ---> 暂不可用
      */
-    public void sendAtMsg(String wxid, String roomId, String text){
+    public void sendAtMsg(String wxid, String roomId, String text) {
         //创建发送消息JSON
         String json = WXMsg.builder()
                 .content(text)
@@ -200,7 +205,7 @@ public class WXServerListener extends WebSocketClient {
     /**
      * Spring重启，实现客户端的自动重连
      */
-    public void restartListener(){
+    public void restartListener() {
         ExecutorService threadPool = new ThreadPoolExecutor(1, 1, 0,
                 TimeUnit.SECONDS, new ArrayBlockingQueue<>(1), new ThreadPoolExecutor.DiscardOldestPolicy());
         threadPool.execute(() -> {
