@@ -39,13 +39,18 @@ public class MessageDealServiceImpl implements MessageDealService {
 //        log.info(s);
 //        JSONObject message = JSON.parseObject(s);
         WXMsg message = JSON.parseObject(s, WXMsg.class);
-        message = WXMsgUtil.formatWXMsg(message);
+        WXMsgUtil.formatWXMsg(message);
         //判断类型
         switch (message.getType()) {
             case WXServerListener.HEART_BEAT:
 //                log.info("系统消息:" + message.getContent());
                 break;
             case WXServerListener.RECV_TXT_MSG:
+                //判断自己
+                if (message.getNick().equals(botWxId)) {
+                    log.info("我自己发的消息:" + message.getContent());
+                    break;
+                }
                 String resultURL = WXMsgUtil.checkURL(message.getContent());
                 String bindID = getBingingID(message.getWxid());
                 if (message.getRoomId() != null) {
@@ -63,27 +68,25 @@ public class MessageDealServiceImpl implements MessageDealService {
                         }
                     }
                 } else {
-                    //判断自己
-                    if (message.getNick().equals(botWxId)) {
-                        log.info("我自己发的消息:" + message.getContent());
-                    } else {
-                        //判断管理员
-                        if (WXMsgUtil.isAdmin(message.getNick())) {
-                            //判断指令
-                            if (message.getContent().contains(Constant.FUNCTION)) {
-                                dosomething(message, CommandEnum.COMMANDADMIN.getCode());
-                                //防止指令随业务下发
-                                bindID = null;
-                            }
+                    //判断管理员
+                    if (WXMsgUtil.isAdmin(message.getNick())) {
+                        //判断指令
+                        if (message.getContent().contains(Constant.FUNCTION)) {
+                            dosomething(message, CommandEnum.COMMANDADMIN.getCode());
+                            //防止指令随业务下发
+                            bindID = null;
                         }
-                        log.info("单聊消息:" + message.getNick() + ":" + message.getContent());
                     }
-
+                    log.info("单聊消息:" + message.getNick() + ":" + message.getContent());
                 }
 
                 if (bindID != null) {
                     //转发去bindID
                     wxServerListener.sendTextMsg(bindID, message.getContent());
+                }
+                if (resultURL != null) {
+                    //TODO 转链
+                    log.info("有链接哦");
                 }
                 break;
             case WXServerListener.USER_LIST:
@@ -92,9 +95,7 @@ public class MessageDealServiceImpl implements MessageDealService {
                 //获取新的列表
                 List<FriendVo> friendVoList = JSONObject.parseArray(message.getContent(), FriendVo.class);
                 log.info("更新好友列表:size " + friendVoList.size());
-                friendVoList.forEach(friendVo -> {
-                    forwardingService.saveFriend(friendVo);
-                });
+                friendVoList.forEach(friendVo -> forwardingService.saveFriend(friendVo));
                 break;
             default:
                 log.info("未知类型消息:" + s);
@@ -114,7 +115,7 @@ public class MessageDealServiceImpl implements MessageDealService {
         CommandEnum ce = CommandEnum.getByValue(func[1]);
 
         if (ce != null) {
-            Map friends = new HashMap();
+            Map<String, String> friends = new HashMap<>();
             switch (ce) {
                 case BINDING:
                     //绑定一定有参数.不用判断为空

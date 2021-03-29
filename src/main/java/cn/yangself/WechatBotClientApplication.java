@@ -8,8 +8,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.EnableAspectJAutoProxy;
-import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
 public class WechatBotClientApplication {
@@ -18,7 +16,7 @@ public class WechatBotClientApplication {
     private String weChatUrl;
 
     public static String[] args;
-    public static ConfigurableApplicationContext context ;
+    public static ConfigurableApplicationContext context;
 
     public static void main(String[] args) {
         WechatBotClientApplication.args = args;

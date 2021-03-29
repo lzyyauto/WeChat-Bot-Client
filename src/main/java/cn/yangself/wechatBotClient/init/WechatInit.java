@@ -16,7 +16,7 @@ public class WechatInit implements CommandLineRunner {
     private WXServerListener wxServerListener;
 
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
         log.info("初始化.获取wxid");
         wxServerListener.getContactList();
     }

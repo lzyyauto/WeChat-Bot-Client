@@ -28,5 +28,5 @@ public interface ForwardingService {
 
     void cleanFriends();
 
-    Map getFriends();
+    Map<String, String> getFriends();
 }

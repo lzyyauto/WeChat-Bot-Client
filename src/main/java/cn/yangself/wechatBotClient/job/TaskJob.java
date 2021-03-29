@@ -13,10 +13,10 @@ public class TaskJob {
     private WXServerListener wxServerListener;
 
     /**
-     * 按照标准时间来算，每隔 1s 执行一次
+     * 按照标准时间来算，每隔 10min 执行一次
      */
-    @Scheduled(cron = "0/1 * * * * ?")
-    public void syncFriend() throws InterruptedException {
+    @Scheduled(cron = "0 0/10 * * * ?")
+    public void syncFriend() {
         log.info("开始同步好友");
         wxServerListener.getContactList();
     }
