@@ -6,4 +6,6 @@ public class Constant {
 
     public static String FRIENDS = "Friends";
 
+    public static String CHATROOMPREFIX = "chatroom";
+
 }

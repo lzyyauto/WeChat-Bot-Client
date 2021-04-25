@@ -29,4 +29,8 @@ public interface ForwardingService {
     void cleanFriends();
 
     Map<String, String> getFriends();
+
+    String getSpecialChatroom(String key);
+
+    boolean onChatRoomBot(String key, String value);
 }

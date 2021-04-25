@@ -81,4 +81,15 @@ public class ForwardingServiceImpl implements ForwardingService {
     public Map getFriends() {
         return stringRedisTemplate.opsForHash().entries(Constant.FRIENDS);
     }
+
+    @Override
+    public String getSpecialChatroom(String key) {
+        return stringRedisTemplate.opsForValue().get(key);
+    }
+
+    @Override
+    public boolean onChatRoomBot(String key, String value) {
+        stringRedisTemplate.opsForValue().set(key, value);
+        return true;
+    }
 }

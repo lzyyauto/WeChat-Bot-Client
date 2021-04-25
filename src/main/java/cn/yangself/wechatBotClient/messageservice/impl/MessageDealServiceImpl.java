@@ -47,55 +47,25 @@ public class MessageDealServiceImpl implements MessageDealService {
                 break;
             case WXServerListener.RECV_TXT_MSG:
                 //判断自己
-                if (message.getNick().equals(botWxId)) {
+                if (isBot(message)) {
                     log.info("我自己发的消息:" + message.getContent());
                     break;
                 }
-                String resultURL = WXMsgUtil.checkURL(message.getContent());
+                checkUrl(message);
                 String bindID = getBingingID(message.getWxid());
                 if (message.getRoomId() != null) {
-                    log.info("群聊消息:" + message.getNick() + ":" + message.getContent());
-                    if (message.getIsAt()) {
-                        //圈我
-                        //判断指令
-                        if (message.getContent().contains(Constant.FUNCTION)) {
-                            dosomething(message, CommandEnum.COMMANDCHAT.getCode());
-                            //防止指令随业务下发
-                            bindID = null;
-                        } else {
-                            //TODO 接入机器人
-                            wxServerListener.sendTextMsg(message.getRoomId() + Constant.CHATROOM, "圈我作甚?");
-                        }
-                    }
+                    dealCharRoomMessage(message, bindID);
                 } else {
-                    //判断管理员
-                    if (WXMsgUtil.isAdmin(message.getNick())) {
-                        //判断指令
-                        if (message.getContent().contains(Constant.FUNCTION)) {
-                            dosomething(message, CommandEnum.COMMANDADMIN.getCode());
-                            //防止指令随业务下发
-                            bindID = null;
-                        }
-                    }
-                    log.info("单聊消息:" + message.getNick() + ":" + message.getContent());
+                    dealPersonMessage(message, bindID);
                 }
 
                 if (bindID != null) {
                     //转发去bindID
                     wxServerListener.sendTextMsg(bindID, message.getContent());
                 }
-                if (resultURL != null) {
-                    //TODO 转链
-                    log.info("有链接哦");
-                }
                 break;
             case WXServerListener.USER_LIST:
-                //清理原有列表
-                forwardingService.cleanFriends();
-                //获取新的列表
-                List<FriendVo> friendVoList = JSONObject.parseArray(message.getContent(), FriendVo.class);
-                log.info("更新好友列表:size " + friendVoList.size());
-                friendVoList.forEach(friendVo -> forwardingService.saveFriend(friendVo));
+                dealUserListMessage(message);
                 break;
             default:
                 log.info("未知类型消息:" + s);
@@ -132,6 +102,10 @@ public class MessageDealServiceImpl implements MessageDealService {
                         friends.put(func[2], forwardingService.getWxidByNick(func[2]));
                     }
                     break;
+                case ON_CHAT:
+                    message.setContent(func[2]);
+                    forwardingService.onChatRoomBot(Constant.CHATROOMPREFIX + message.getContent(), Constant.CHATROOMPREFIX);
+                    break;
                 default:
                     log.info("nothing happen!");
             }
@@ -160,7 +134,75 @@ public class MessageDealServiceImpl implements MessageDealService {
 
     }
 
+    //处理个人消息
+    private void dealPersonMessage(WXMsg message, String bindID) {
+        log.info("单聊消息:" + message.getNick() + ":" + message.getContent());
+        if (isAdmin(message)) {
+            doFunction(message, bindID);
+        }
+    }
+
+    //处理群消息
+    private void dealCharRoomMessage(WXMsg message, String bindID) {
+        log.info("群聊消息:" + message.getNick() + ":" + message.getContent());
+        if (message.getIsAt()) {
+            if (isAdmin(message)) {
+                doFunction(message, bindID);
+            }
+        }
+    }
+
+    //处理好友列表
+    private void dealUserListMessage(WXMsg message) {
+        //清理原有列表
+        forwardingService.cleanFriends();
+        //获取新的列表
+        List<FriendVo> friendVoList = JSONObject.parseArray(message.getContent(), FriendVo.class);
+        log.info("更新好友列表:size " + friendVoList.size());
+        friendVoList.forEach(friendVo -> forwardingService.saveFriend(friendVo));
+    }
+
+    //是否转发
     private String getBingingID(String key) {
         return forwardingService.getBindingID(key);
+    }
+
+    //是否开启智能回复并回复
+    private void dealSpecialChatroom(WXMsg message) {
+        //是否指定群
+        if (forwardingService.getSpecialChatroom("chatroom" + message.getWxid()) != null) {
+            //TODO 接入机器人
+            wxServerListener.sendTextMsg(message.getRoomId() + Constant.CHATROOM, "圈我作甚?");
+        }
+    }
+
+    //TODO 转链
+    //是否包含Url
+    private String checkUrl(WXMsg message) {
+        String realUrl = WXMsgUtil.checkURL(message.getContent());
+        if (realUrl != null) {
+            log.info("有链接哦");
+        }
+        return null;
+    }
+
+    //是否管理员
+    private boolean isAdmin(WXMsg message) {
+        return WXMsgUtil.isAdmin(message.getNick());
+    }
+
+    //是否机器人本身
+    private boolean isBot(WXMsg message) {
+        return message.getNick().equals(botWxId);
+    }
+
+    //判断并执行功能
+    private void doFunction(WXMsg message, String bindID) {
+        if (message.getContent().contains(Constant.FUNCTION)) {
+            dosomething(message, CommandEnum.COMMANDCHAT.getCode());
+            bindID = null;
+        } else {
+            dealSpecialChatroom(message);
+        }
     }
 }

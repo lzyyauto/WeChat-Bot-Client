@@ -9,6 +9,7 @@ public enum CommandEnum {
     BINDING(0, "绑定", "binding"),
     UNBUNDLING(1, "解绑", "unbundling"),
     FRILIST(2, "好友列表", "frilist"),
+    ON_CHAT(3, "打开群聊智能回复", "onchat"),
 
     //指令来源
     COMMANDCHAT(0, "群聊指令", "commandchat"),
