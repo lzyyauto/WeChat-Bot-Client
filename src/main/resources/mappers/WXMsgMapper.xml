@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.yangself.wechatBotClient.mapper.WXMsgMapper">
+
+    <insert id="saveWXMsg">
+        INSERT INTO `w_message` (`id`,
+        `wxid`,
+        `content`,
+        `room_id`,
+        `type`,
+        `nick`,
+        `id1`,
+        `id2`,
+        `srv_id`,
+        `time`,
+        `is_at`)
+        VALUES (#{message.id},
+        #{message.wxid},
+        #{message.content},
+        #{message.roomId},
+        #{message.type},
+        #{message.nick},
+        #{message.id1},
+        #{message.id2},
+        #{message.srvid},
+        #{message.time},
+        #{message.isAt})
+    </insert>
+
+<!--    <delete id="deleteById">-->
+<!--        DELETE-->
+<!--        FROM `orm_user`-->
+<!--        WHERE `id` = #{id}-->
+<!--    </delete>-->
+</mapper>
