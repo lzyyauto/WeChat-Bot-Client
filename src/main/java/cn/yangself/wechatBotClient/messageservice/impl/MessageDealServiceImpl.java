@@ -4,6 +4,7 @@ import cn.yangself.wechatBotClient.constant.Constant;
 import cn.yangself.wechatBotClient.domain.WXMsg;
 import cn.yangself.wechatBotClient.entity.FriendVo;
 import cn.yangself.wechatBotClient.enums.CommandEnum;
+import cn.yangself.wechatBotClient.mapper.WXMsgMapper;
 import cn.yangself.wechatBotClient.messageservice.MessageDealService;
 import cn.yangself.wechatBotClient.service.ForwardingService;
 import cn.yangself.wechatBotClient.service.WXServerListener;
@@ -34,6 +35,9 @@ public class MessageDealServiceImpl implements MessageDealService {
     @Autowired
     private ForwardingService forwardingService;
 
+    @Autowired
+    private WXMsgMapper wxMsgMapper;
+
     @Override
     public boolean dealTextMessage(String s) {
 //        log.info(s);
@@ -46,6 +50,8 @@ public class MessageDealServiceImpl implements MessageDealService {
 //                log.info("系统消息:" + message.getContent());
                 break;
             case WXServerListener.RECV_TXT_MSG:
+                //保存
+                wxMsgMapper.saveWXMsg(message);
                 //判断自己
                 if (isBot(message)) {
                     log.info("我自己发的消息:" + message.getContent());
