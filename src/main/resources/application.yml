@@ -23,7 +23,7 @@ spring:
       maximum-pool-size: 20
       auto-commit: true
       idle-timeout: 30000
-      pool-name: SpringBootDemoHikariCP
+      pool-name: WechatBotHikariCP
       max-lifetime: 60000
       connection-timeout: 30000
   # Redis

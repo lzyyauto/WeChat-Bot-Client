@@ -17,14 +17,15 @@ public class WXMsg implements Serializable {
     private String id;
     private String wxid;
     private String content;
-    private String roomId;
+    private String roomid;
     private int type;
-    private String nick;
+    private String nickname;
     private String id1;
     private String id2;
     private String srvid;
     private String time;
     private Boolean isAt = false;
+    private String ext;
 
 
     public String toJson() {

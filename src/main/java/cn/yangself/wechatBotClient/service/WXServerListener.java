@@ -5,14 +5,9 @@ import cn.yangself.wechatBotClient.domain.WXMsg;
 import cn.yangself.wechatBotClient.messageservice.MessageDealService;
 import lombok.extern.slf4j.Slf4j;
 import org.java_websocket.client.WebSocketClient;
-import org.java_websocket.enums.ReadyState;
 import org.java_websocket.handshake.ServerHandshake;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
-import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.annotation.Bean;
-import org.springframework.stereotype.Component;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -128,8 +123,12 @@ public class WXServerListener extends WebSocketClient {
                 .wxid(wxid)
                 .type(TXT_MSG)
                 .id(getSessionId())
+                .nickname(NULL_MSG)
+                .roomid(NULL_MSG)
+                .ext(NULL_MSG)
                 .build()
                 .toJson();
+
         log.info("发送文本消息 --> " + json);
         sendMsg(json);
     }
@@ -161,7 +160,7 @@ public class WXServerListener extends WebSocketClient {
         String json = WXMsg.builder()
                 .content(text)
                 .wxid(wxid)
-                .roomId(roomId)
+                .roomid(roomId)
                 .type(AT_MSG)
                 .id(getSessionId())
                 .build()

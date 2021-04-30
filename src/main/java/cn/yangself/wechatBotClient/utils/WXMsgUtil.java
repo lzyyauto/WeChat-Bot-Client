@@ -30,11 +30,11 @@ public class WXMsgUtil {
         }
         if (wxMsg.getId2().contains(Constant.CHATROOM)) {
             String[] ids = wxMsg.getId2().split("@");
-            wxMsg.setRoomId(ids[0]);
+            wxMsg.setRoomid(ids[0]);
 
-            wxMsg.setNick(wxMsg.getId1());
+            wxMsg.setNickname(wxMsg.getId1());
         } else {
-            wxMsg.setNick(wxMsg.getId2());
+            wxMsg.setNickname(wxMsg.getId2());
         }
 
         if (wxMsg.getContent().contains("@" + botNick)) {

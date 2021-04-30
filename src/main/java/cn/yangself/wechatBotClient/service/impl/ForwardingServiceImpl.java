@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Map;
 
 @Service
@@ -34,7 +33,7 @@ public class ForwardingServiceImpl implements ForwardingService {
 
     @Override
     public boolean bindingPerson(WXMsg message) {
-        stringRedisTemplate.opsForValue().set(message.getRoomId(), message.getContent());
+        stringRedisTemplate.opsForValue().set(message.getRoomid(), message.getContent());
         return true;
     }
 
@@ -46,7 +45,7 @@ public class ForwardingServiceImpl implements ForwardingService {
 
     @Override
     public boolean unbundlingPerson(WXMsg message) {
-        stringRedisTemplate.delete(message.getRoomId());
+        stringRedisTemplate.delete(message.getRoomid());
         return true;
     }
 

@@ -59,7 +59,7 @@ public class MessageDealServiceImpl implements MessageDealService {
                 }
                 checkUrl(message);
                 String bindID = getBingingID(message.getWxid());
-                if (message.getRoomId() != null) {
+                if (message.getRoomid() != null) {
                     dealCharRoomMessage(message, bindID);
                 } else {
                     dealPersonMessage(message, bindID);
@@ -142,7 +142,7 @@ public class MessageDealServiceImpl implements MessageDealService {
 
     //处理个人消息
     private void dealPersonMessage(WXMsg message, String bindID) {
-        log.info("单聊消息:" + message.getNick() + ":" + message.getContent());
+        log.info("单聊消息:" + message.getNickname() + ":" + message.getContent());
         if (isAdmin(message)) {
             doFunction(message, bindID);
         }
@@ -150,7 +150,7 @@ public class MessageDealServiceImpl implements MessageDealService {
 
     //处理群消息
     private void dealCharRoomMessage(WXMsg message, String bindID) {
-        log.info("群聊消息:" + message.getNick() + ":" + message.getContent());
+        log.info("群聊消息:" + message.getNickname() + ":" + message.getContent());
         if (message.getIsAt()) {
             if (isAdmin(message)) {
                 doFunction(message, bindID);
@@ -178,7 +178,7 @@ public class MessageDealServiceImpl implements MessageDealService {
         //是否指定群
         if (forwardingService.getSpecialChatroom("chatroom" + message.getWxid()) != null) {
             //TODO 接入机器人
-            wxServerListener.sendTextMsg(message.getRoomId() + Constant.CHATROOM, "圈我作甚?");
+            wxServerListener.sendTextMsg(message.getRoomid() + Constant.CHATROOM, "圈我作甚?");
         }
     }
 
@@ -194,12 +194,12 @@ public class MessageDealServiceImpl implements MessageDealService {
 
     //是否管理员
     private boolean isAdmin(WXMsg message) {
-        return WXMsgUtil.isAdmin(message.getNick());
+        return WXMsgUtil.isAdmin(message.getNickname());
     }
 
     //是否机器人本身
     private boolean isBot(WXMsg message) {
-        return message.getNick().equals(botWxId);
+        return message.getNickname().equals(botWxId);
     }
 
     //判断并执行功能

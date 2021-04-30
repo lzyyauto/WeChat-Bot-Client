@@ -20,7 +20,7 @@ class WXMsgMapperTest extends WechatBotClientTestApplication {
         wxMsg.setId("123999");
         wxMsg.setWxid("asdasdasd");
         wxMsg.setContent("adasdsa");
-        wxMsg.setNick("adasdsa");
+        wxMsg.setNickname("adasdsa");
         wxMsg.setId1("adasdsa");
         wxMsg.setId2("adasdsa");
         wxMsg.setSrvid("adasdsa");
